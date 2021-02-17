@@ -14,11 +14,40 @@ namespace Business.Concrete
         public CarManager(ICarDal carDal)
         {
             _carDal = carDal;
+ 
         }
+
+        public void Add(Car car)
+        {
+            if (car.Description.Length >= 2 && car.DailyPrice > 0)
+                    {
+                Console.WriteLine("Araba veritabanına eklendi!");
+            }
+            else
+            {
+                Console.WriteLine("Kaydetmek istenilen arabanın markası 2 harfli veya daha fazla olmalıdır.");
+                Console.WriteLine(" Ayrıca günlük kiralama bedeli de 0'dan farklı olmalıdır.");
+            }
+
+
+        
+        }
+
+        
 
         public List<Car> GetAll()
         {
             return _carDal.GetAll();
+        }
+
+        public List<Car> GetCarsByBrandId(int id)
+        {
+            return _carDal.GetAll(p => p.BrandId == id);
+        }
+
+        public List<Car> GetCarsByColorId(int id)
+        {
+            return _carDal.GetAll(p => p.ColorId == id );
         }
     }
 }
