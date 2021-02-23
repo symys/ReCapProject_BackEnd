@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -18,46 +20,46 @@ namespace Business.Concrete
  
         }
 
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
-            if (car.Description.Length >= 2 && car.DailyPrice > 0)
-                    {
-                Console.WriteLine("Araba veritabanına eklendi!");
-                _carDal.Add(car);
-            }
-            else
+            if (car.Description.Length <= 2 && car.DailyPrice <= 0)
             {
-                Console.WriteLine("Kaydetmek istenilen arabanın markası 2 harfli veya daha fazla olmalıdır.");
-                Console.WriteLine(" Ayrıca günlük kiralama bedeli de 0'dan farklı olmalıdır.");
+                return new ErrorResult(Messages.NameInvalid);
             }
+            _carDal.Add(car);
+            return new SuccessResult(Messages.CarAdded);
 
-
-        
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
             _carDal.Delete(car);
+            return new SuccessResult(Messages.Deleted);
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-            return _carDal.GetAll();
+            if (DateTime.Now.Hour == 3)
+            {
+                return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
+            }
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarListed);
         }
 
-        public List<CarDetailDto> GetCarDetails()
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            return _carDal.GetCarDetails();
+            return new SuccessDataResult<List<CarDetailDto>>( _carDal.GetCarDetails());
         }
 
-        public List<Car> GetCarsByCarId(int carId)
+        public IDataResult<List<Car>> GetCarsByCarId(int carId)
         {
-            return _carDal.GetAll(p => p.CarId == carId);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.CarId == carId));
         }
 
-        public void Update(Car car)
+        public IResult Update(Car car)
         {
             _carDal.Update(car);
+            return new SuccessResult(Messages.Updated);
         }
     }
 }

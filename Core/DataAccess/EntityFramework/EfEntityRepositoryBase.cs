@@ -10,7 +10,7 @@ namespace Core.DataAccess.EntityFramework
 {
     public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity> //IEntityRepository--bütün operasyonları sağlaması için inheritance yapıldı, TEntity--IEntityRepository'de temel operayonların imzası, T=TEntity
         where TEntity: class, IEntity, new()
-        where TContext: DbContext, new() //newlenmesi sayesinde northwind coontext gb seyleri getirir
+        where TContext: DbContext, new() //newlenmesi sayesinde northwind context gb seyleri getirir
     {
         public void Add(TEntity entity)
         {
