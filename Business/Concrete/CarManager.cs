@@ -27,14 +27,14 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.NameInvalid);
             }
             _carDal.Add(car);
-            return new SuccessResult(Messages.CarAdded);
+            return new SuccessResult(Messages.AddedOperation);
 
         }
 
         public IResult Delete(Car car)
         {
             _carDal.Delete(car);
-            return new SuccessResult(Messages.Deleted);
+            return new SuccessResult(Messages.DeletedOperation);
         }
 
         public IDataResult<List<Car>> GetAll()
@@ -43,7 +43,7 @@ namespace Business.Concrete
             {
                 return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
             }
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarListed);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.ListOperation);
         }
 
         public IDataResult<List<CarDetailDto>> GetCarDetails()
@@ -59,7 +59,7 @@ namespace Business.Concrete
         public IResult Update(Car car)
         {
             _carDal.Update(car);
-            return new SuccessResult(Messages.Updated);
+            return new SuccessResult(Messages.UpdatedOperation);
         }
     }
 }

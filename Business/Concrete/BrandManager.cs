@@ -25,13 +25,13 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.NameInvalid);
             }
             _brandDal.Add(brand);
-            return new SuccessResult(Messages.BrandAdded);
+            return new SuccessResult(Messages.AddedOperation);
         }
 
         public IResult Delete(Brand brand)
         {
             _brandDal.Delete(brand);
-            return new SuccessResult(Messages.Deleted);
+            return new SuccessResult(Messages.DeletedOperation);
         }
 
         public IDataResult<List<Brand>> GetAll()
@@ -40,7 +40,7 @@ namespace Business.Concrete
             {
                 return new ErrorDataResult<List<Brand>>(Messages.MaintenanceTime);
             }
-            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(), Messages.BrandListed);
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(), Messages.ListOperation);
         }
 
         public IDataResult<Brand> GetById(int brandId)
@@ -51,7 +51,7 @@ namespace Business.Concrete
         public IResult Update(Brand brand)
         {
             _brandDal.Update(brand);
-            return new SuccessResult(Messages.Updated);
+            return new SuccessResult(Messages.UpdatedOperation);
         }
     }
 }
