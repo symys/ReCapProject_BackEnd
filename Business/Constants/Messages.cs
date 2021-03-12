@@ -14,5 +14,7 @@ namespace Business.Constants
         public static string AddedOperation = " Ekleme işlemi başarılı";
         public static string ListOperation = " Listeleme işlemi başarılı";
         public static string RentalInvalid = " Araç kullanıcıdadır, henüz teslim edilmemiştir";
+        public static string ImageCountOfCarError = "Her aracın en fazla 5 fotoğrafı olabilir";
+        public static string CarImagesCarIdNotEmpty = "Eklenmek istenen aracın CarId kısmı boş olamaz";
     }
 }
