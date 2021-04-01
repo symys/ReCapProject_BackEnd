@@ -7,60 +7,108 @@ using System.Text;
 
 namespace Core.Utilities.Helpers
 {
+    
     public class FileHelper
     {
-        public static string Add(IFormFile file)
+        private static string _currentDirectory = Environment.CurrentDirectory + "\\wwwroot";
+        private static string _folderName = "\\images\\";
+
+        public static IResult Upload(IFormFile file)
         {
-            var imagePath = Path.GetTempFileName();
-            if (file.Length > 0)
+            var fileExists = CheckFileExists(file);
+            if (fileExists.Message != null)
             {
-                using (var stream = new FileStream(imagePath, FileMode.Create))
-                {
-                    file.CopyTo(stream);
-                }
+                return new ErrorResult(fileExists.Message);
             }
-            var result = NewPath(file);
-            File.Move(imagePath, result);
-            return result;
+
+            var type = Path.GetExtension(file.FileName);
+            var typeValid = CheckFileTypeValid(type);
+            var randomName = Guid.NewGuid().ToString();
+
+            if (typeValid.Message != null)
+            {
+                return new ErrorResult(typeValid.Message);
+            }
+
+            CheckDirectoryExists(_currentDirectory + _folderName);
+            CreateImageFile(_currentDirectory + _folderName + randomName + type, file);
+            return new SuccessResult((_folderName + randomName + type).Replace("\\", "/"));
         }
 
-        public static string NewPath(IFormFile file)
+        public static IResult Update(IFormFile file, string imagePath)
         {
-            FileInfo fileInfo = new FileInfo(file.FileName);
-            string fileExtension = fileInfo.Extension;
-            string path = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + @"\WebAPI\Images");
-            var newPath = Guid.NewGuid().ToString() + fileExtension;
+            var fileExists = CheckFileExists(file);
+            if (fileExists.Message != null)
+            {
+                return new ErrorResult(fileExists.Message);
+            }
 
-            var result = $@"{path}\{newPath}";
-            return result;
+            var type = Path.GetExtension(file.FileName);
+            var typeValid = CheckFileTypeValid(type);
+            var randomName = Guid.NewGuid().ToString();
+
+            if (typeValid.Message != null)
+            {
+                return new ErrorResult(typeValid.Message);
+            }
+
+            DeleteOldImageFile((_currentDirectory + imagePath).Replace("/", "\\"));
+            CheckDirectoryExists(_currentDirectory + _folderName);
+            CreateImageFile(_currentDirectory + _folderName + randomName + type, file);
+            return new SuccessResult((_folderName + randomName + type).Replace("\\", "/"));
         }
 
         public static IResult Delete(string path)
         {
-            try
-            {
-                File.Delete(path);
-            }
-            catch (Exception exception)
-            {
+            DeleteOldImageFile((_currentDirectory + path).Replace("/", "\\"));
+            return new SuccessResult();
+        }
 
-                return new ErrorResult(exception.Message);
+
+
+
+        private static IResult CheckFileExists(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                return new SuccessResult();
+            }
+            return new ErrorResult("File doesn't exists.");
+        }
+
+
+        private static IResult CheckFileTypeValid(string type)
+        {
+            if (type != ".jpeg" && type != ".png" && type != ".jpg")
+            {
+                return new ErrorResult("Wrong file type.");
             }
             return new SuccessResult();
         }
 
-        public static string Update(string imagePath, IFormFile file)
+        private static void CheckDirectoryExists(string directory)
         {
-            var result = NewPath(file).ToString();
-            if (imagePath.Length > 0)
+            if (!Directory.Exists(directory))
             {
-                using (var stream = new FileStream(result, FileMode.Create))
-                {
-                    file.CopyTo(stream);
-                }
+                Directory.CreateDirectory(directory);
             }
-            File.Delete(imagePath);
-            return result;
+        }
+        private static void CreateImageFile(string directory, IFormFile file)
+        {
+            using (FileStream fs = File.Create(directory))
+            {
+                file.CopyTo(fs);
+                fs.Flush();
+            }
+        }
+
+        private static void DeleteOldImageFile(string directory)
+        {
+            if (File.Exists(directory.Replace("/", "\\")))
+            {
+                File.Delete(directory.Replace("/", "\\"));
+            }
+
         }
     }
 }

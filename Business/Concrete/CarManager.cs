@@ -13,6 +13,7 @@ using Entities.DTOs;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 
@@ -21,11 +22,15 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         ICarDal _carDal;
+        IBrandDal _brandDal;
+        IColorDal _colorDal;
 
-        public CarManager(ICarDal carDal)
+        public CarManager(ICarDal carDal, IBrandDal brandDal, IColorDal colorDal)
         {
             _carDal = carDal;
- 
+            _brandDal = brandDal;
+            _colorDal = colorDal;
+
         }
 
         [SecuredOperation("car.add, admin")]
@@ -80,6 +85,18 @@ namespace Business.Concrete
             _carDal.Update(car);
             _carDal.Add(car);
             return new SuccessResult(Messages.UpdatedOperation);
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarsByColorId(int colorId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails()
+                .Where(p => p.ColorName == _colorDal.Get(t => t.ColorId == colorId).ColorName).ToList());
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarsByBrandId(int brandId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails()
+                .Where(p => p.BrandName == _brandDal.Get(t => t.BrandId == brandId).BrandName).ToList());
         }
     }
 }

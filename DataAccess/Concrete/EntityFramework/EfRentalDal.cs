@@ -26,8 +26,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  FirstName = u.FirstName,
                                  LastName = u.LastName,
                                  CompanyName = cu.CompanyName,
-                                 //RentDate = r.RentDate,
-                                 //ReturnDate = r.ReturnDate
+                                 RentDate = r.RentDate,
+                                 ReturnDate = r.ReturnDate
                              };
                 return result.ToList(); 
                 
