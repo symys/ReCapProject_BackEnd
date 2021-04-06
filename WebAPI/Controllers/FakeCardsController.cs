@@ -11,63 +11,20 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RentalsController : ControllerBase
+    public class FakeCardsController : ControllerBase
     {
-        IRentalService _rentalService;
+        IFakeCardService _fakeCardService;
 
-        public RentalsController(IRentalService rentalService)
+        public FakeCardsController(IFakeCardService fakeCardService)
         {
-            _rentalService = rentalService;
+            _fakeCardService = fakeCardService;
         }
 
-        [HttpGet("getall")]
-        public IActionResult GetAll()
-        {
-            var result = _rentalService.GetAll();
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        [HttpGet("getrentaldetails")]
-        public IActionResult GetRentalDetails()
-        {
-            var result = _rentalService.GetRentalDetails();
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        [HttpGet("getbyid")]
-        public IActionResult GetById(int rentId)
-        {
-            var result = _rentalService.GetById(rentId);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
 
         [HttpPost("add")]
-        public IActionResult Add(Rental rental)
+        public IActionResult Add(FakeCard fakeCard)
         {
-            var result = _rentalService.Add(rental);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        [HttpPost("update")]
-        public IActionResult Update(Rental rental)
-        {
-            var result = _rentalService.Update(rental);
+            var result = _fakeCardService.Add(fakeCard);
             if (result.Success)
             {
                 return Ok(result);
@@ -76,9 +33,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("delete")]
-        public IActionResult Delete(Rental rental)
+        public IActionResult Delete(FakeCard fakeCard)
         {
-            var result = _rentalService.Delete(rental);
+            var result = _fakeCardService.Delete(fakeCard);
             if (result.Success)
             {
                 return Ok(result);
@@ -86,11 +43,54 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("getrentalbycarid")]
-
-        public IActionResult GetRentalByCarId(int carId)
+        [HttpPost("update")]
+        public IActionResult Update(FakeCard fakeCard)
         {
-            var result = _rentalService.GetRentalByCarId(carId);
+            var result = _fakeCardService.Update(fakeCard);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getall")]
+        public IActionResult GetAll()
+        {
+            var result = _fakeCardService.GetAll();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("geybyid")]
+        public IActionResult GetById(int id)
+        {
+            var result = _fakeCardService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetByCardNumber")]
+        public IActionResult GetByCardNumber(string cardNumber)
+        {
+            var result = _fakeCardService.GetByCardNumber(cardNumber);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("iscardexist")]
+        public IActionResult IsCardExist(FakeCard fakeCard)
+        {
+            var result = _fakeCardService.IsCardExist(fakeCard);
             if (result.Success)
             {
                 return Ok(result);

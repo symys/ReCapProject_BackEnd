@@ -26,6 +26,12 @@ namespace Business.Constants
         public static string UserAlreadyExists = "Böyle bir kullanıcı zaten mevcut";
         public static string AccessTokenCreated = "Access token oluşturuldu";
         public static string ImageNotFound = "resim buulunamadı";
-      
+
+        public static string FakeCardAdded = "Kart oluşturuldu";
+        public static string FakeCardDeleted = "Kart silindi";
+        public static string FakeCardsListed = "Kartlar listelendi";
+        public static string FakeCardUpdated = "Kartlar güncellendi";
+        public static string CardExists = "Kart mevcut";
+        public static string CardCannotFound = "Kart bulunamadı";
     }
 }
